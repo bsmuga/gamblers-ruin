@@ -34,3 +34,6 @@ setup.log
 
 # Local OPAM switch
 _opam/
+
+# Per-agent Claude Code memory (runtime state, regenerated on demand)
+.claude/agent-memory/
