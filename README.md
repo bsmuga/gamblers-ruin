@@ -1,5 +1,7 @@
 # gamblers-ruin
 
+[![CI](https://github.com/bsmuga/gamblers-ruin/actions/workflows/ci.yml/badge.svg)](https://github.com/bsmuga/gamblers-ruin/actions/workflows/ci.yml)
+
 The **gambler's-ruin** problem, solved three independent ways that cross-check
 one another. A gambler starts with fortune `i`, bets one unit per round, wins
 with probability `p` and loses with `q = 1 − p`. The states `0` (ruin) and `N`
