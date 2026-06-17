@@ -57,6 +57,36 @@ dune build @fmt                                # check formatting
 dune exec gamblers-ruin -- --target 10 --start 5 --p 0.5   # run the CLI
 ```
 
+## Running the CLI
+
+```sh
+dune exec gamblers-ruin -- --target 10 --start 4 --p 0.45 --simulate --seed 3
+```
+
+| Flag | Meaning |
+|------|---------|
+| `--target N` | upper absorbing barrier (required, `N ≥ 2`) |
+| `--start I` | initial fortune |
+| `--p P` | win probability per round |
+| `--simulate` | also render one simulated trajectory as a sparkline |
+| `--seed S` | PRNG seed for `--simulate` |
+
+It prints the ruin probability (engine and analytic — which agree) and the expected
+duration; with `--simulate` it also renders one trajectory and its outcome:
+
+```
+ruin probability   0.808734 (engine)  0.808734 (analytic)
+expected duration  20.8734 rounds
+▃▂▃▄▅▆▆▆▆▇▆▆▆▇█
+outcome: reached target in 14 rounds
+```
+
+The library is also usable directly from a REPL:
+
+```sh
+dune utop lib   # then: Gamblers_ruin.Engine.ruin_probabilities (Gamblers_ruin.Walk.constant ~target:10 ~p:0.5);;
+```
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
