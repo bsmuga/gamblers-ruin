@@ -14,10 +14,14 @@ let render_trajectory traj n =
      ; "\xe2\x96\x88"
     |]
   in
+  let top = Array.length blocks - 1 in
   let buf = Buffer.create (Array.length traj) in
   Array.iter
     (fun pos ->
-      let idx = int_of_float (Float.round (float_of_int pos /. float_of_int n *. 8.0)) in
+      let idx =
+        int_of_float
+          (Float.round (float_of_int pos /. float_of_int n *. float_of_int top))
+      in
       Buffer.add_string buf blocks.(idx))
     traj;
   print_endline (Buffer.contents buf)

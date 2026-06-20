@@ -1,4 +1,3 @@
-(* [+1] with probability [win pos], else [-1]. *)
 let step (w : Walk.t) state pos =
   if Random.State.float state 1.0 < w.Walk.win pos then pos + 1 else pos - 1
 ;;

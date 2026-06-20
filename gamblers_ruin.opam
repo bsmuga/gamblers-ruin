@@ -12,7 +12,7 @@ license: "MIT"
 homepage: "https://github.com/bsmuga/gamblers-ruin"
 bug-reports: "https://github.com/bsmuga/gamblers-ruin/issues"
 depends: [
-  "ocaml" {>= "4.14"}
+  "ocaml" {>= "5.1"}
   "dune" {>= "3.0"}
   "alcotest" {with-test}
   "qcheck-alcotest" {with-test}

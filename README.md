@@ -32,12 +32,6 @@ expected duration k_i = i/(q−p) − N/(q−p)·(1−r^i)/(1−r^N)  (p ≠ q),
 The test suite asserts that the engine, the closed forms, and the simulation all
 agree.
 
-## Status
-
-Implemented. All four modules — `Walk`, `Engine`, `Analytic`, and `Simulate` — are
-complete, and the test suite cross-checks the three routes (engine vs. closed form vs.
-Monte-Carlo). `dune test` runs 12 cases green.
-
 ## Layout
 
 ```
@@ -52,7 +46,7 @@ test/   alcotest suite
 opam switch create . --deps-only --with-test   # one-time: local switch + deps
 eval $(opam env)                               # activate the switch (puts dune on PATH)
 dune build                                     # compile (warning-clean)
-dune test                                      # run the suite (12 cases)
+dune test                                      # run the suite
 dune build @fmt                                # check formatting
 dune exec gamblers-ruin -- --target 10 --start 5 --p 0.5   # run the CLI
 ```

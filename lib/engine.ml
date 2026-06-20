@@ -39,14 +39,11 @@ let solve (w : Walk.t) ~b ~lo ~hi =
   let m = n - 1 in
   let p = Array.init m (fun j -> win (j + 1)) in
   let q = Array.map (fun pi -> 1.0 -. pi) p in
-  let sub = Array.copy q in
   let diag = Array.make m (-1.0) in
-  let sup = Array.copy p in
   let rhs = Array.make m b in
-  (* fold the known boundary values into the right-hand side *)
   rhs.(0) <- rhs.(0) -. (q.(0) *. lo);
   rhs.(m - 1) <- rhs.(m - 1) -. (p.(m - 1) *. hi);
-  let interior = solve_tridiagonal ~sub ~diag ~sup ~rhs in
+  let interior = solve_tridiagonal ~sub:q ~diag ~sup:p ~rhs in
   let out = Float.Array.make (n + 1) 0.0 in
   Float.Array.set out 0 lo;
   Float.Array.set out n hi;

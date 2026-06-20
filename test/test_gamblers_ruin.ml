@@ -50,12 +50,23 @@ let test_fair_special () =
 ;;
 
 let test_unfair_example () =
-  let w = Walk.constant ~target:5 ~p:0.4 in
+  let n = 5 in
+  let w = Walk.constant ~target:n ~p:0.4 in
   let h = Engine.ruin_probabilities w in
-  for i = 0 to 5 do
+  (* Known answer for r = q/p = 1.5, N = 5: h_i = (r^N - r^i) / (r^N - 1). *)
+  let expected =
+    [| 1.0
+     ; 0.9241706161137441
+     ; 0.8104265402843602
+     ; 0.6398104265402843
+     ; 0.3838862559241706
+     ; 0.0
+    |]
+  in
+  for i = 0 to n do
     Alcotest.(check (float 1e-9))
       (Printf.sprintf "h_%d" i)
-      (Analytic.ruin_probability w ~start:i)
+      expected.(i)
       (Float.Array.get h i)
   done
 ;;
@@ -97,6 +108,8 @@ let test_sim_matches_analytic () =
   let w = Walk.constant ~target:10 ~p:0.5 in
   let ruin_freq, _ = Simulate.monte_carlo w ~start:4 ~trials:20000 ~seed:42 in
   let analytic = Analytic.ruin_probability w ~start:4 in
+  (* Loose by design: ruin prob 0.6, so SE ~ 0.0035 over 20000 trials; 0.03 is ~8 sigma
+     and never flakes on the fixed seed. *)
   Alcotest.(check bool)
     (Printf.sprintf "sim %.4f near analytic %.4f" ruin_freq analytic)
     true
@@ -143,6 +156,24 @@ let prop_engine_matches_analytic =
     !ok)
 ;;
 
+let prop_engine_matches_analytic_durations =
+  QCheck.Test.make
+    ~count:200
+    ~name:"engine matches analytic durations"
+    gen_walk
+    (fun (n, pn) ->
+       let p = float_of_int pn /. 20. in
+       let w = Walk.constant ~target:n ~p in
+       let k = Engine.expected_durations w in
+       let ok = ref true in
+       for i = 1 to n - 1 do
+         let a = Analytic.expected_duration w ~start:i in
+         if Float.abs (Float.Array.get k i -. a) > 1e-6 *. (1. +. Float.abs a)
+         then ok := false
+       done;
+       !ok)
+;;
+
 let () =
   Alcotest.run
     "gamblers_ruin"
@@ -170,6 +201,7 @@ let () =
     ; ( "properties"
       , [ QCheck_alcotest.to_alcotest prop_engine_invariants
         ; QCheck_alcotest.to_alcotest prop_engine_matches_analytic
+        ; QCheck_alcotest.to_alcotest prop_engine_matches_analytic_durations
         ] )
     ]
 ;;
